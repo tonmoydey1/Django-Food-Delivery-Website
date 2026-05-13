@@ -32,6 +32,8 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
     '127.0.0.1,localhost',
+    "django-food-delivery-website-main-4c619d9.kuberns.cloud",
+    "*",
 ).split(',')
 
 
