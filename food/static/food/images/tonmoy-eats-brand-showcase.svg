@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Tonmoy Eats Brand Identity Showcase</title>
+  <desc id="desc">Behance style Tonmoy Eats brand identity board with logo variations, color palette, typography, social preview, app splash, packaging, and dark and light versions.</desc>
+  <defs>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="0.5" stop-color="#E53935"/>
+      <stop offset="1" stop-color="#121212"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F5F5F5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#FAFAFA"/>
+  <rect x="60" y="60" width="1480" height="880" rx="40" fill="#FFFFFF"/>
+  <rect x="60" y="60" width="1480" height="300" rx="40" fill="url(#hero)"/>
+  <text x="118" y="150" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="900" fill="#FAFAFA">Tonmoy Eats</text>
+  <text x="122" y="206" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700" fill="#FFE9E2">Premium modern food delivery brand identity</text>
+  <path d="M122 252h260" stroke="#FFC107" stroke-width="12" stroke-linecap="round"/>
+  <rect x="1260" y="112" width="160" height="160" rx="40" fill="#E53935"/>
+  <path d="M1298 214h84" stroke="#FFC107" stroke-width="10" stroke-linecap="round"/>
+  <path d="M1304 162h72v22h-25v68h-22v-68h-25v-22Z" fill="#FAFAFA"/>
+  <path d="M1375 174h33M1390 196h25" stroke="#121212" stroke-width="8" stroke-linecap="round"/>
+
+  <g transform="translate(105 410)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">Logo system</text>
+    <rect y="28" width="420" height="210" rx="24" fill="url(#card)" stroke="#EFEFEF"/>
+    <rect x="30" y="62" width="82" height="82" rx="22" fill="#E53935"/>
+    <text x="71" y="119" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="900" fill="#FAFAFA">T</text>
+    <text x="136" y="94" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="900" fill="#121212">Tonmoy</text>
+    <text x="136" y="132" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="900" fill="#E53935">Eats</text>
+    <rect x="30" y="166" width="134" height="38" rx="12" fill="#121212"/>
+    <text x="97" y="191" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="900" fill="#FAFAFA">Black + Red</text>
+    <rect x="184" y="166" width="134" height="38" rx="12" fill="#E53935"/>
+    <text x="251" y="191" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="900" fill="#FAFAFA">App Icon</text>
+  </g>
+
+  <g transform="translate(575 410)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">Color palette</text>
+    <rect y="28" width="420" height="210" rx="24" fill="#FFFFFF" stroke="#EFEFEF"/>
+    <rect x="28" y="62" width="72" height="100" rx="16" fill="#E53935"/>
+    <rect x="112" y="62" width="72" height="100" rx="16" fill="#121212"/>
+    <rect x="196" y="62" width="72" height="100" rx="16" fill="#FF7043"/>
+    <rect x="280" y="62" width="72" height="100" rx="16" fill="#FFC107"/>
+    <text x="28" y="195" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#121212">#E53935</text>
+    <text x="112" y="195" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#121212">#121212</text>
+    <text x="196" y="195" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#121212">#FF7043</text>
+    <text x="280" y="195" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#121212">#FFC107</text>
+  </g>
+
+  <g transform="translate(1045 410)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">Typography</text>
+    <rect y="28" width="420" height="210" rx="24" fill="#121212"/>
+    <text x="30" y="92" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="900" fill="#FAFAFA">Inter Black</text>
+    <text x="30" y="134" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" fill="#FFC107">Headlines, app bars, badges</text>
+    <text x="30" y="178" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="600" fill="#FFFFFF" opacity="0.72">Alt: Poppins / Manrope</text>
+  </g>
+
+  <g transform="translate(105 705)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">Social media preview</text>
+    <rect y="28" width="420" height="190" rx="24" fill="#E53935"/>
+    <text x="34" y="96" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" fill="#FAFAFA">Fresh food.</text>
+    <text x="34" y="140" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" fill="#FAFAFA">Fast delivery.</text>
+    <rect x="298" y="66" width="80" height="80" rx="22" fill="#121212"/>
+    <text x="338" y="121" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="900" fill="#FAFAFA">T</text>
+  </g>
+
+  <g transform="translate(575 705)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">Dark and light mode</text>
+    <rect y="28" width="190" height="190" rx="24" fill="#FAFAFA" stroke="#EFEFEF"/>
+    <rect x="230" y="28" width="190" height="190" rx="24" fill="#121212"/>
+    <rect x="55" y="72" width="80" height="80" rx="22" fill="#E53935"/>
+    <text x="95" y="128" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="900" fill="#FAFAFA">T</text>
+    <rect x="285" y="72" width="80" height="80" rx="22" fill="#E53935"/>
+    <text x="325" y="128" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="900" fill="#FAFAFA">T</text>
+  </g>
+
+  <g transform="translate(1045 705)">
+    <text y="0" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="900" fill="#121212">App splash and packaging</text>
+    <rect y="28" width="180" height="190" rx="28" fill="#121212"/>
+    <rect x="58" y="70" width="64" height="64" rx="18" fill="#E53935"/>
+    <text x="90" y="115" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="900" fill="#FAFAFA">T</text>
+    <text x="90" y="166" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#FAFAFA">Tonmoy Eats</text>
+    <path d="M240 92h186l-22 100H262l-22-100Z" fill="#FFFFFF" stroke="#E7E7E7" stroke-width="4"/>
+    <rect x="299" y="120" width="70" height="34" rx="9" fill="#E53935"/>
+    <text x="334" y="143" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="900" fill="#FAFAFA">T Eats</text>
+  </g>
+</svg>

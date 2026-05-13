@@ -1,0 +1,109 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Checkout - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Checkout</span>
+        <h1>Delivery and payment</h1>
+        <p>Confirm your address, choose a payment method, and place the order.</p>
+    </div>
+</section>
+
+<section class="section checkout-layout">
+    <form class="checkout-form" method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-grid two">
+            <label class="form-field">
+                <span>First name</span>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </label>
+            <label class="form-field">
+                <span>Last name</span>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </label>
+            <label class="form-field">
+                <span>Email</span>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </label>
+            <label class="form-field">
+                <span>Phone</span>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </label>
+        </div>
+        <label class="form-field">
+            <span>Street address</span>
+            {{ form.address }}
+            {{ form.address.errors }}
+        </label>
+        <div class="form-grid two">
+            <label class="form-field">
+                <span>City</span>
+                {{ form.city }}
+                {{ form.city.errors }}
+            </label>
+            <label class="form-field">
+                <span>Postcode</span>
+                {{ form.postcode }}
+                {{ form.postcode.errors }}
+            </label>
+        </div>
+        <label class="form-field">
+            <span>Delivery notes</span>
+            {{ form.delivery_notes }}
+            {{ form.delivery_notes.errors }}
+        </label>
+        <div class="payment-options">
+            <span>Payment method</span>
+            {{ form.payment_method }}
+            {{ form.payment_method.errors }}
+        </div>
+        <button class="primary-button" type="submit">
+            <i data-lucide="check-circle"></i>
+            Place order
+        </button>
+    </form>
+
+    <aside class="summary-panel">
+        <h2>Order summary</h2>
+        {% if user.is_authenticated and user.profile.premium_active %}
+            <div class="premium-summary-badge">
+                <i data-lucide="crown"></i>
+                <span>{{ user.profile.get_premium_plan_display }} Premium active</span>
+                <strong>Free delivery + {{ cart.premium_discount_percent }}% off</strong>
+            </div>
+        {% endif %}
+        {% for row in cart_items %}
+            <div class="mini-order-row">
+                <span>{{ row.quantity }} x {{ row.item.name }}</span>
+                <strong>&#8377;{{ row.line_total }}</strong>
+            </div>
+        {% endfor %}
+        <div class="summary-line">
+            <span>Subtotal</span>
+            <strong>&#8377;{{ cart.subtotal }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Delivery</span>
+            <strong>{% if cart.premium_active %}Free{% else %}&#8377;{{ cart.delivery_fee }}{% endif %}</strong>
+        </div>
+        <div class="summary-line premium-discount-line">
+            <span>Premium discount{% if cart.premium_active %} ({{ cart.premium_discount_percent }}%){% endif %}</span>
+            <strong>-&#8377;{{ cart.discount }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Tax</span>
+            <strong>&#8377;{{ cart.tax }}</strong>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>&#8377;{{ cart.total }}</strong>
+        </div>
+    </aside>
+</section>
+{% endblock %}

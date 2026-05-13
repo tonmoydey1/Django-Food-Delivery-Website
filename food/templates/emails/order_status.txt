@@ -1,0 +1,5 @@
+Hi {{ order.customer_name }},
+
+Your Tonmoy Eats order {{ order.tracking_code }} is now: {{ order.get_status_display }}.
+
+Track your order: {{ tracking_url }}

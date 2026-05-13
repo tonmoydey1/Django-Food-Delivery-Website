@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Tonmoy Eats Delivery Bag and Packaging Mockup</title>
+  <desc id="desc">Premium Tonmoy Eats delivery bag, packaging boxes, cup, sticker, t-shirt, cap, and bike branding mockup.</desc>
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="1" stop-color="#E53935"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#121212" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="720" fill="#FAFAFA"/>
+  <rect x="54" y="54" width="1092" height="612" rx="36" fill="#FFFFFF" stroke="#EFEFEF"/>
+  <text x="88" y="118" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="900" fill="#121212">Tonmoy Eats brand mockups</text>
+  <text x="88" y="154" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#6B6B6B">Delivery bag, packaging, stickers, uniform, and bike branding</text>
+
+  <g filter="url(#shadow)">
+    <path d="M104 488l42-240h196l42 240H104Z" fill="#121212"/>
+    <path d="M151 248c10-72 54-108 93-108s83 36 93 108" fill="none" stroke="#E53935" stroke-width="18" stroke-linecap="round"/>
+    <rect x="161" y="326" width="166" height="92" rx="18" fill="url(#red)"/>
+    <text x="244" y="379" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="900" fill="#FAFAFA">Tonmoy Eats</text>
+    <path d="M210 394h70" stroke="#FFC107" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M478 310h246l-34 168H512l-34-168Z" fill="#FFFFFF" stroke="#E7E7E7" stroke-width="4"/>
+    <path d="M478 310l57-82h134l55 82H478Z" fill="#F4F4F4" stroke="#E7E7E7" stroke-width="4"/>
+    <rect x="540" y="350" width="122" height="58" rx="12" fill="#E53935"/>
+    <text x="601" y="387" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="900" fill="#FAFAFA">Tonmoy Eats</text>
+    <path d="M557 420h88" stroke="#FFC107" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M794 248h114l-16 232h-82l-16-232Z" fill="#FFFFFF" stroke="#E7E7E7" stroke-width="4"/>
+    <path d="M790 248h122l-8-44H798l-8 44Z" fill="#121212"/>
+    <circle cx="851" cy="338" r="42" fill="url(#red)"/>
+    <text x="851" y="354" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="900" fill="#FAFAFA">T</text>
+  </g>
+
+  <g>
+    <circle cx="997" cy="282" r="70" fill="#121212"/>
+    <text x="997" y="291" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="900" fill="#FAFAFA">Partner</text>
+    <path d="M946 318h102" stroke="#E53935" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M865 548c9-82 43-124 101-124s92 42 101 124H865Z" fill="#121212"/>
+    <path d="M922 452h88l-44 70-44-70Z" fill="#E53935"/>
+    <text x="966" y="575" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#FAFAFA">Tonmoy Eats</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M704 586c28-54 80-82 156-82h56c58 0 99 25 123 76" fill="none" stroke="#121212" stroke-width="22" stroke-linecap="round"/>
+    <circle cx="783" cy="586" r="34" fill="#121212"/>
+    <circle cx="783" cy="586" r="14" fill="#FAFAFA"/>
+    <circle cx="984" cy="586" r="34" fill="#121212"/>
+    <circle cx="984" cy="586" r="14" fill="#FAFAFA"/>
+    <rect x="825" y="456" width="108" height="86" rx="18" fill="url(#red)"/>
+    <text x="879" y="507" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" fill="#FAFAFA">T</text>
+  </g>
+</svg>

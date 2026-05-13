@@ -1,0 +1,70 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Track {{ order.tracking_code }} - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="tracking-shell js-live-tracking" data-status-url="{% url 'order_status_api' order.tracking_code %}">
+    <div class="tracking-header">
+        <div>
+            <span class="eyebrow">Live tracking</span>
+            <h1>Order {{ order.tracking_code }}</h1>
+            <p>{{ order.restaurant.name }} to {{ order.address }}, {{ order.city }}</p>
+        </div>
+        <div class="tracking-status">
+            <span>Status</span>
+            <strong data-live-status>{{ tracking.status_label }}</strong>
+        </div>
+    </div>
+
+    <div class="tracking-grid">
+        <section class="tracking-panel">
+            <div class="progress-bar">
+                <span data-live-progress style="width: {{ tracking.progress }}%;"></span>
+            </div>
+            <div class="timeline" data-live-steps>
+                {% for step in tracking.steps %}
+                    <div class="timeline-step {% if step.complete %}complete{% endif %}" data-step="{{ step.key }}">
+                        <span></span>
+                        <strong>{{ step.label }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="courier-card">
+                <div>
+                    <span>Courier</span>
+                    <strong data-courier-name>{{ tracking.courier.name }}</strong>
+                </div>
+                <a href="tel:{{ tracking.courier.phone }}">
+                    <i data-lucide="phone"></i>
+                    {{ tracking.courier.phone }}
+                </a>
+            </div>
+        </section>
+
+        <section class="map-panel">
+            <div class="map-grid"></div>
+            <div class="route-line"></div>
+            <div class="map-marker restaurant-marker">
+                <i data-lucide="store"></i>
+            </div>
+            <div class="map-marker home-marker">
+                <i data-lucide="home"></i>
+            </div>
+            <div class="courier-marker" data-live-marker style="left: {{ tracking.progress }}%;">
+                <i data-lucide="bike"></i>
+            </div>
+        </section>
+    </div>
+
+    <div class="order-actions">
+        <a class="secondary-button" href="{% url 'invoice_pdf' order.tracking_code %}">
+            <i data-lucide="file-text"></i>
+            Invoice PDF
+        </a>
+        <a class="secondary-button" href="{% url 'order_detail' order.tracking_code %}">
+            <i data-lucide="receipt"></i>
+            Order details
+        </a>
+    </div>
+</section>
+{% endblock %}

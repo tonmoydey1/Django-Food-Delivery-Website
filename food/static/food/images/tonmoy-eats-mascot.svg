@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" role="img" aria-labelledby="title desc">
+  <title id="title">Tonmoy Eats 3D Mascot Logo Version</title>
+  <desc id="desc">Friendly premium delivery mascot wearing a Tonmoy Eats helmet and holding a branded food bag.</desc>
+  <defs>
+    <linearGradient id="helmet" x1="160" y1="64" x2="360" y2="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="0.52" stop-color="#E53935"/>
+      <stop offset="1" stop-color="#B71C1C"/>
+    </linearGradient>
+    <linearGradient id="jacket" x1="145" y1="250" x2="390" y2="470" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2B2B2B"/>
+      <stop offset="1" stop-color="#121212"/>
+    </linearGradient>
+    <linearGradient id="bag" x1="300" y1="270" x2="452" y2="430" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="1" stop-color="#E53935"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#121212" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="520" height="520" rx="56" fill="#FAFAFA"/>
+  <ellipse cx="260" cy="456" rx="176" ry="30" fill="#121212" opacity="0.12"/>
+  <g filter="url(#softShadow)">
+    <path d="M142 440c10-103 51-157 118-157s108 54 118 157H142Z" fill="url(#jacket)"/>
+    <path d="M201 292h118l-23 50h-72l-23-50Z" fill="#FAFAFA"/>
+    <path d="M230 326h60l-30 88-30-88Z" fill="#E53935"/>
+    <circle cx="260" cy="197" r="92" fill="#F0B68E"/>
+    <path d="M170 194c7-76 42-116 90-116s83 40 90 116H170Z" fill="url(#helmet)"/>
+    <path d="M168 193h184c-7 43-38 72-92 72s-85-29-92-72Z" fill="#FAFAFA"/>
+    <path d="M196 188c17-21 40-32 64-32s47 11 64 32H196Z" fill="#121212" opacity="0.9"/>
+    <path d="M224 115h72v32h-21v55h-30v-55h-21v-32Z" fill="#FAFAFA"/>
+    <circle cx="230" cy="213" r="8" fill="#121212"/>
+    <circle cx="290" cy="213" r="8" fill="#121212"/>
+    <path d="M234 236c16 14 36 14 52 0" fill="none" stroke="#121212" stroke-width="8" stroke-linecap="round"/>
+    <path d="M326 315c31-18 61-20 89-4" fill="none" stroke="#F0B68E" stroke-width="28" stroke-linecap="round"/>
+    <path d="M318 316h130l-13 110H330l-12-110Z" fill="url(#bag)"/>
+    <path d="M353 316c5-28 20-42 32-42s27 14 32 42" fill="none" stroke="#121212" stroke-width="11" stroke-linecap="round"/>
+    <path d="M363 343h45v12h-16v42h-14v-42h-15v-12Z" fill="#FAFAFA"/>
+    <path d="M356 401h59" fill="none" stroke="#FFC107" stroke-width="7" stroke-linecap="round"/>
+    <path d="M112 330c-18 18-29 43-32 74M96 315c-31 28-48 61-52 101" fill="none" stroke="#FF7043" stroke-width="9" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>

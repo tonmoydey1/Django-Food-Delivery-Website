@@ -1,0 +1,68 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Register - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card wide">
+        <span class="eyebrow">Create account</span>
+        <h1>Register</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="start_registration">
+            {{ form.non_field_errors }}
+            <div class="form-grid two">
+                <label class="form-field">
+                    <span>First name</span>
+                    {{ form.first_name }}
+                    {{ form.first_name.errors }}
+                </label>
+                <label class="form-field">
+                    <span>Last name</span>
+                    {{ form.last_name }}
+                    {{ form.last_name.errors }}
+                </label>
+            </div>
+            <label class="form-field">
+                <span>Username</span>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </label>
+            <label class="form-field">
+                <span>Email</span>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </label>
+            <div class="form-grid two">
+                <label class="form-field">
+                    <span>Password</span>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </label>
+                <label class="form-field">
+                    <span>Confirm password</span>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </label>
+            </div>
+            <button class="primary-button full-width" type="submit">Send OTP</button>
+        </form>
+        {% if registration_otp_pending %}
+            <div class="otp-login-panel registration-otp-panel">
+                <h2>Verify your email</h2>
+                <p>We sent a 6 digit OTP to <strong>{{ registration_otp_email }}</strong>.</p>
+                <form method="post" class="otp-verify-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="verify_registration_otp">
+                    <label class="form-field">
+                        <span>Enter registration OTP</span>
+                        <input class="form-input otp-input" type="text" name="registration_otp_code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required>
+                    </label>
+                    <button class="primary-button full-width" type="submit">Verify and create account</button>
+                </form>
+            </div>
+        {% endif %}
+        <p class="auth-switch">Already registered? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</section>
+{% endblock %}

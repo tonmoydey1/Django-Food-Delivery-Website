@@ -1,0 +1,25 @@
+<article class="restaurant-card">
+    <a class="restaurant-image" href="{{ restaurant.get_absolute_url }}">
+        {% if restaurant.cover_image %}
+            <img src="{{ restaurant.cover_image }}" alt="{{ restaurant.name }}">
+        {% endif %}
+        <span class="status-badge {% if restaurant.is_open_now %}is-open{% endif %}">
+            {% if restaurant.is_open_now %}Open{% else %}Closed{% endif %}
+        </span>
+    </a>
+    <div class="restaurant-body">
+        <div>
+            <h3><a href="{{ restaurant.get_absolute_url }}">{{ restaurant.name }}</a></h3>
+            <p>{{ restaurant.tagline }}</p>
+        </div>
+        <div class="meta-row">
+            <span><i data-lucide="star"></i>{{ restaurant.rating }}</span>
+            <span><i data-lucide="clock-3"></i>{{ restaurant.delivery_time }} min</span>
+            <span><i data-lucide="bike"></i>&#8377;{{ restaurant.delivery_fee }}</span>
+        </div>
+        <div class="card-footer">
+            <span>{{ restaurant.cuisine }}</span>
+            <a class="small-button" href="{{ restaurant.get_absolute_url }}">Order</a>
+        </div>
+    </div>
+</article>

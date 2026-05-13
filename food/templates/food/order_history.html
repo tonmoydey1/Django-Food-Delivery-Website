@@ -1,0 +1,75 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Order history - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="orders-hero">
+    <div>
+        <span class="eyebrow">Orders</span>
+        <h1>Your food journey</h1>
+        <p>Track active deliveries, reopen invoices, and review every Tonmoy Eats order from one polished dashboard.</p>
+    </div>
+    <div class="orders-stats">
+        <article>
+            <span>Total orders</span>
+            <strong>{{ order_stats.total_orders }}</strong>
+        </article>
+        <article>
+            <span>Active now</span>
+            <strong>{{ order_stats.active_orders }}</strong>
+        </article>
+        <article>
+            <span>Total spent</span>
+            <strong>&#8377;{{ order_stats.total_spent|floatformat:2 }}</strong>
+        </article>
+    </div>
+</section>
+
+<section class="section orders-section">
+    <div class="orders-toolbar">
+        <div>
+            <span class="eyebrow">Recent activity</span>
+            <h2>Orders and invoices</h2>
+        </div>
+        <a class="secondary-button" href="{% url 'restaurant_list' %}">
+            <i data-lucide="utensils"></i>
+            Order again
+        </a>
+    </div>
+
+    <div class="history-list orders-list">
+        {% for order in orders %}
+            <article class="history-row">
+                <div class="history-main">
+                    <span class="history-icon"><i data-lucide="receipt-text"></i></span>
+                    <div>
+                        <strong>Order {{ order.tracking_code }}</strong>
+                        <span>{{ order.restaurant.name }} - {{ order.created_at|date:"M d, Y h:i A" }}</span>
+                    </div>
+                </div>
+                <div class="history-meta">
+                    <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    <small>{{ order.get_payment_status_display }}</small>
+                    <strong>&#8377;{{ order.total }}</strong>
+                </div>
+                <div class="history-actions">
+                    <a class="secondary-button" href="{% url 'order_tracking' order.tracking_code %}">
+                        <i data-lucide="map-pin"></i>
+                        Track
+                    </a>
+                    <a class="secondary-button" href="{% url 'order_detail' order.tracking_code %}">
+                        <i data-lucide="file-text"></i>
+                        Details
+                    </a>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <h2>No orders yet</h2>
+                <p>Your completed and active orders will appear here.</p>
+                <a class="primary-button" href="{% url 'restaurant_list' %}">Order food</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

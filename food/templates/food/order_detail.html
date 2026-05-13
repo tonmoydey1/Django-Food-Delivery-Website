@@ -1,0 +1,63 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Order {{ order.tracking_code }} - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Order details</span>
+        <h1>{{ order.tracking_code }}</h1>
+        <p>{{ order.get_status_display }} from {{ order.restaurant.name }}</p>
+    </div>
+    <a class="primary-button" href="{% url 'order_tracking' order.tracking_code %}">
+        <i data-lucide="map"></i>
+        Track order
+    </a>
+</section>
+
+<section class="section order-detail-layout">
+    <div class="detail-panel">
+        <h2>Items</h2>
+        {% for item in order.items.all %}
+            <div class="mini-order-row">
+                <span>{{ item.quantity }} x {{ item.name }}</span>
+                <strong>&#8377;{{ item.line_total }}</strong>
+            </div>
+        {% endfor %}
+    </div>
+    <aside class="summary-panel">
+        <h2>Payment</h2>
+        <div class="summary-line">
+            <span>Method</span>
+            <strong>{{ order.get_payment_method_display }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Status</span>
+            <strong>{{ order.get_payment_status_display }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Subtotal</span>
+            <strong>&#8377;{{ order.subtotal }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Delivery</span>
+            <strong>&#8377;{{ order.delivery_fee }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Tax</span>
+            <strong>&#8377;{{ order.tax }}</strong>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>&#8377;{{ order.total }}</strong>
+        </div>
+        {% if order.payment_method == 'card' and order.payment_status != 'paid' %}
+            <a class="primary-button full-width" href="{% url 'payment_start' order.tracking_code %}">Pay now</a>
+        {% endif %}
+        <a class="secondary-button full-width" href="{% url 'invoice_pdf' order.tracking_code %}">
+            <i data-lucide="file-text"></i>
+            Invoice PDF
+        </a>
+    </aside>
+</section>
+{% endblock %}

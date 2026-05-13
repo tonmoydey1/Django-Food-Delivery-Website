@@ -1,0 +1,107 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Cart - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Cart</span>
+        <h1>Your order</h1>
+        <p>Adjust quantities before checkout. Each order ships from one restaurant for faster delivery.</p>
+    </div>
+</section>
+
+<section class="section cart-layout">
+    <div class="cart-table">
+        {% if cart_items %}
+            {% for row in cart_items %}
+                <article class="cart-row" data-cart-row="{{ row.item.id }}">
+                    <div class="cart-food">
+                        <img src="{{ row.item.image_url }}" alt="{{ row.item.name }}">
+                        <div>
+                            <h3>{{ row.item.name }}</h3>
+                            <p>{{ row.item.restaurant.name }}</p>
+                            <span>&#8377;{{ row.item.price }}</span>
+                        </div>
+                    </div>
+                    <div class="qty-control">
+                        <button type="button" class="icon-button js-qty" data-item-id="{{ row.item.id }}" data-delta="-1" aria-label="Decrease quantity">
+                            <i data-lucide="minus"></i>
+                        </button>
+                        <input class="qty-input" type="number" min="1" value="{{ row.quantity }}" data-item-id="{{ row.item.id }}" aria-label="Quantity">
+                        <button type="button" class="icon-button js-qty" data-item-id="{{ row.item.id }}" data-delta="1" aria-label="Increase quantity">
+                            <i data-lucide="plus"></i>
+                        </button>
+                    </div>
+                    <strong data-line-total="{{ row.item.id }}">&#8377;{{ row.line_total }}</strong>
+                    <button class="icon-button danger js-remove-cart" type="button" data-item-id="{{ row.item.id }}" aria-label="Remove item">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </article>
+            {% endfor %}
+            <button class="ghost-button js-clear-cart" type="button">
+                <i data-lucide="x-circle"></i>
+                Clear cart
+            </button>
+        {% else %}
+            <div class="empty-state">
+                <h2>Your cart is empty</h2>
+                <p>Browse restaurants and add something delicious.</p>
+                <a class="primary-button" href="{% url 'restaurant_list' %}">Browse restaurants</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <aside class="summary-panel">
+        <h2>Order summary</h2>
+        {% if user.is_authenticated and user.profile.premium_active %}
+            <div class="premium-summary-badge">
+                <i data-lucide="crown"></i>
+                <span>{{ user.profile.get_premium_plan_display }} Premium active</span>
+                <strong>You save &#8377;{{ cart.premium_savings }}</strong>
+            </div>
+        {% elif user.is_authenticated %}
+            <a class="premium-summary-badge upgrade" href="{% url 'premium' %}">
+                <i data-lucide="crown"></i>
+                <span>Unlock Premium</span>
+                <strong>Free delivery + up to 25% off</strong>
+            </a>
+        {% endif %}
+        <div class="summary-line">
+            <span>Restaurant</span>
+            <strong data-summary-restaurant>{{ cart.restaurant.name|default:"Not selected" }}</strong>
+        </div>
+        <div class="summary-line">
+            <span>Subtotal</span>
+            <strong>&#8377;<span data-summary-subtotal>{{ cart.subtotal }}</span></strong>
+        </div>
+        <div class="summary-line">
+            <span>Delivery</span>
+            <strong>{% if cart.premium_active %}Free{% else %}&#8377;<span data-summary-delivery>{{ cart.delivery_fee }}</span>{% endif %}</strong>
+        </div>
+        <div class="summary-line premium-discount-line">
+            <span>Premium discount{% if cart.premium_active %} ({{ cart.premium_discount_percent }}%){% endif %}</span>
+            <strong>-&#8377;<span data-summary-discount>{{ cart.discount }}</span></strong>
+        </div>
+        <div class="summary-line">
+            <span>Tax</span>
+            <strong>&#8377;<span data-summary-tax>{{ cart.tax }}</span></strong>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>&#8377;<span data-summary-total>{{ cart.total }}</span></strong>
+        </div>
+        {% if cart_items %}
+            <a class="primary-button full-width" href="{% url 'checkout' %}">
+                <i data-lucide="credit-card"></i>
+                Checkout
+            </a>
+        {% else %}
+            <a class="primary-button full-width" href="{% url 'restaurant_list' %}">
+                <i data-lucide="utensils"></i>
+                Start order
+            </a>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

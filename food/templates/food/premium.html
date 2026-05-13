@@ -1,0 +1,138 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Premium - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="premium-hero">
+    <div class="premium-hero-copy">
+        <span class="eyebrow">Tonmoy Eats Premium</span>
+        <h1>Free delivery and member discounts on every order.</h1>
+        <p>Premium unlocks plan-based food discounts, zero delivery fee, and stronger support benefits on monthly and annual subscriptions.</p>
+        <div class="premium-actions">
+            {% if profile.premium_active %}
+                <a class="primary-button" href="{% url 'restaurant_list' %}">
+                    <i data-lucide="utensils"></i>
+                    Order with Premium
+                </a>
+                <button class="secondary-button" type="button" data-open-premium-cancel>
+                    <i data-lucide="x-circle"></i>
+                    Cancel subscription
+                </button>
+            {% else %}
+                <form method="post" action="{% url 'premium_payment_start' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan" value="monthly">
+                    <button class="primary-button" type="submit">
+                        <i data-lucide="crown"></i>
+                        Activate Premium
+                    </button>
+                </form>
+                <a class="secondary-button" href="#premium-plans">
+                    <i data-lucide="layers-3"></i>
+                    View plans
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <aside class="premium-card">
+        <span>{% if profile.premium_active %}Current subscription{% else %}Plans from{% endif %}</span>
+        <strong>{% if profile.premium_active %}Active{% else %}&#8377;29{% endif %}</strong>
+        <p>{% if profile.premium_active %}Your {{ profile.get_premium_plan_display }} plan gives {{ profile.premium_discount_percent }}% off eligible food subtotal until your active period ends.{% else %}Choose weekly, monthly, or annual Premium and pay securely with Stripe card checkout.{% endif %}</p>
+        {% if profile.premium_active %}
+            <div class="premium-status active">
+                <i data-lucide="badge-check"></i>
+                <span>{% if profile.premium_expires_at %}Active until {{ profile.premium_expires_at|date:"d M Y" }}{% else %}Premium active{% endif %}</span>
+            </div>
+            <button class="ghost-button full-width" type="button" data-open-premium-cancel>Cancel Premium</button>
+        {% else %}
+            <div class="premium-status">
+                <i data-lucide="credit-card"></i>
+                <span>Pay with card to activate</span>
+            </div>
+        {% endif %}
+    </aside>
+</section>
+
+{% if not profile.premium_active %}
+<section class="section premium-plans" id="premium-plans">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Choose your subscription</span>
+            <h2>Premium plans for every appetite</h2>
+        </div>
+    </div>
+    <div class="premium-plan-grid">
+        {% for plan in premium_plans %}
+            <article class="premium-plan-card{% if plan.featured %} featured{% endif %}">
+                <div class="premium-plan-top">
+                    <span>{{ plan.badge }}</span>
+                    <i data-lucide="{% if plan.key == 'annual' %}trophy{% elif plan.key == 'weekly' %}calendar-days{% else %}crown{% endif %}"></i>
+                </div>
+                <h2>{{ plan.name }}</h2>
+                <div class="premium-plan-price">
+                    <strong>&#8377;{{ plan.price|floatformat:0 }}</strong>
+                    <span>/ {{ plan.duration_text }}</span>
+                </div>
+                <p>{{ plan.description }}</p>
+                <ul>
+                    <li><i data-lucide="check"></i> {{ plan.discount_percent }}% off food subtotal</li>
+                    <li><i data-lucide="check"></i> Zero delivery fee</li>
+                    {% if plan.priority_support %}
+                        <li><i data-lucide="check"></i> Priority order support</li>
+                    {% else %}
+                        <li><i data-lucide="check"></i> Standard order support</li>
+                    {% endif %}
+                </ul>
+                <form method="post" action="{% url 'premium_payment_start' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan" value="{{ plan.key }}">
+                    <button class="{% if plan.featured %}primary-button{% else %}secondary-button{% endif %} full-width" type="submit">
+                        Pay &#8377;{{ plan.price|floatformat:0 }} with card
+                    </button>
+                </form>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="section premium-benefits">
+    <article>
+        <i data-lucide="truck"></i>
+        <h2>Free delivery</h2>
+        <p>Delivery fee becomes zero automatically when your cart is calculated.</p>
+    </article>
+    <article>
+        <i data-lucide="badge-percent"></i>
+        <h2>Plan-based discounts</h2>
+        <p>Weekly gets 5%, monthly gets 20%, and annual gets 25% off eligible food subtotal.</p>
+    </article>
+    <article>
+        <i data-lucide="receipt"></i>
+        <h2>Invoice-ready totals</h2>
+        <p>Premium discounts are saved on the order and shown in the invoice summary.</p>
+    </article>
+</section>
+
+{% if profile.premium_active %}
+<div class="premium-cancel-modal" data-premium-cancel-modal aria-hidden="true">
+    <div class="premium-cancel-backdrop" data-premium-cancel-close></div>
+    <section class="premium-cancel-card" role="dialog" aria-modal="true" aria-labelledby="premium-cancel-title">
+        <button class="icon-button premium-cancel-close" type="button" data-premium-cancel-close aria-label="Close cancel popup">
+            <i data-lucide="x"></i>
+        </button>
+        <span class="eyebrow">Cancel Premium</span>
+        <h2 id="premium-cancel-title">Are you sure you want to cancel?</h2>
+        <p>You will lose free delivery, your {{ profile.premium_discount_percent }}% member discount, and Premium offers for future orders.</p>
+        <div class="premium-cancel-actions">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="cancel">
+                <button class="danger-button" type="submit">Yes, cancel Premium</button>
+            </form>
+            <button class="secondary-button" type="button" data-premium-cancel-close>Keep Premium</button>
+        </div>
+    </section>
+</div>
+{% endif %}
+{% endblock %}

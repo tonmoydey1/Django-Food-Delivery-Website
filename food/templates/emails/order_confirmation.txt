@@ -1,0 +1,10 @@
+Hi {{ order.customer_name }},
+
+Your Tonmoy Eats order {{ order.tracking_code }} has been placed with {{ order.restaurant.name }}.
+
+Total: Rs. {{ order.total }}
+Payment: {{ order.get_payment_method_display }} / {{ order.get_payment_status_display }}
+Invoice: Attached as a PDF
+Track your order: {{ tracking_url }}
+
+Thank you for ordering.

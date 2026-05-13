@@ -1,0 +1,77 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Profile - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="page-hero compact-hero">
+    <div>
+        <span class="eyebrow">Profile</span>
+        <h1>{{ user.get_full_name|default:user.username }}</h1>
+        <p>Keep your delivery details ready for faster checkout.</p>
+    </div>
+</section>
+
+<section class="section profile-layout">
+    <form class="profile-form" method="post">
+        {% csrf_token %}
+        <div class="form-grid two">
+            <label class="form-field">
+                <span>First name</span>
+                {{ user_form.first_name }}
+            </label>
+            <label class="form-field">
+                <span>Last name</span>
+                {{ user_form.last_name }}
+            </label>
+        </div>
+        <label class="form-field">
+            <span>Email</span>
+            {{ user_form.email }}
+        </label>
+        <div class="form-grid two">
+            <label class="form-field">
+                <span>Phone</span>
+                {{ profile_form.phone }}
+            </label>
+            <label class="form-field">
+                <span>Postcode</span>
+                {{ profile_form.postcode }}
+            </label>
+        </div>
+        <label class="form-field">
+            <span>Address</span>
+            {{ profile_form.address }}
+        </label>
+        <div class="form-grid two">
+            <label class="form-field">
+                <span>City</span>
+                {{ profile_form.city }}
+            </label>
+            <label class="form-field">
+                <span>Avatar URL</span>
+                {{ profile_form.avatar_url }}
+            </label>
+        </div>
+        <label class="form-field">
+            <span>Delivery notes</span>
+            {{ profile_form.delivery_notes }}
+        </label>
+        <button class="primary-button" type="submit">
+            <i data-lucide="save"></i>
+            Save profile
+        </button>
+    </form>
+
+    <aside class="summary-panel">
+        <h2>Recent orders</h2>
+        {% for order in recent_orders %}
+            <a class="profile-order-link" href="{% url 'order_detail' order.tracking_code %}">
+                <span>{{ order.restaurant.name }}</span>
+                <strong>{{ order.get_status_display }}</strong>
+            </a>
+        {% empty %}
+            <p>No recent orders.</p>
+        {% endfor %}
+    </aside>
+</section>
+{% endblock %}

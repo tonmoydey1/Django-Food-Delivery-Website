@@ -1,0 +1,183 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>{% block title %}Tonmoy Eats{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'food/css/styles.css' %}?v=premium-buttons-1">
+</head>
+<body data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
+    <header class="site-header">
+        <nav class="navbar">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-mark">
+                    <img src="{% static 'food/images/tonmoy-eats-logo.svg' %}" alt="Tonmoy Eats logo">
+                </span>
+                <span class="brand-copy">
+                    <span class="brand-name">TONMOY EATS</span>
+                    {% if user.is_authenticated and user.profile.premium_active %}
+                        <span class="premium-logo-badge">
+                            <i data-lucide="crown"></i>
+                            Premium member
+                        </span>
+                    {% endif %}
+                </span>
+            </a>
+            <button class="icon-button mobile-menu-button" type="button" data-mobile-menu aria-label="Open menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="nav-links" data-nav-links>
+                <a class="nav-link" href="{% url 'restaurant_list' %}">
+                    <i data-lucide="utensils"></i>
+                    <span>Restaurants</span>
+                </a>
+                <a class="nav-link premium-nav-link" href="{% url 'premium' %}">
+                    <i data-lucide="crown"></i>
+                    <span>{% if user.is_authenticated and user.profile.premium_active %}Premium{% else %}Go Premium{% endif %}</span>
+                </a>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'order_history' %}">
+                        <i data-lucide="receipt-text"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a class="nav-link profile-nav-link" href="{% url 'profile' %}">
+                        <span class="nav-avatar" aria-hidden="true">{{ user.username|slice:":1"|upper }}</span>
+                        <span>Profile</span>
+                    </a>
+                    <form class="inline-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="nav-button" type="submit">
+                            <i data-lucide="log-out"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">
+                        <i data-lucide="log-in"></i>
+                        <span>Login</span>
+                    </a>
+                    <a class="nav-button" href="{% url 'register' %}">
+                        <i data-lucide="user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                {% endif %}
+                <a class="cart-link" href="{% url 'cart' %}" aria-label="Cart">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Cart</span>
+                    <strong data-cart-count>{{ cart_count }}</strong>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <section class="footer-brand">
+                <a class="brand footer-logo" href="{% url 'home' %}">
+                    <span class="brand-mark">
+                        <img src="{% static 'food/images/tonmoy-eats-logo.svg' %}" alt="Tonmoy Eats logo">
+                    </span>
+                    <span class="brand-name">TONMOY EATS</span>
+                </a>
+                <p>Food ordering with fast checkout, live delivery tracking, order history, and invoice-ready payments.</p>
+                <div class="footer-badges" aria-label="Service highlights">
+                    <span><i data-lucide="shield-check"></i> Secure checkout</span>
+                    <span><i data-lucide="bike"></i> Live tracking</span>
+                    <span><i data-lucide="receipt"></i> PDF invoices</span>
+                </div>
+            </section>
+
+            <section class="footer-column">
+                <h2>Explore</h2>
+                <a href="{% url 'restaurant_list' %}">Restaurants</a>
+                <a href="{% url 'cart' %}">Cart</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'order_history' %}">Order history</a>
+                    <a href="{% url 'profile' %}">Profile</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Create account</a>
+                {% endif %}
+            </section>
+
+            <section class="footer-column">
+                <h2>Support</h2>
+                <a href="mailto:support@tonmoyeats.local"><i data-lucide="mail"></i> support@tonmoyeats.local</a>
+                <a href="tel:+919000012345"><i data-lucide="phone"></i> +91 90000 12345</a>
+                <a href="mailto:partners@tonmoyeats.local"><i data-lucide="store"></i> Partner with us</a>
+                <a href="{% url 'restaurant_list' %}?open_now=1"><i data-lucide="clock-3"></i> Open restaurants</a>
+            </section>
+
+            <section class="footer-tools">
+                <h2>Track an order</h2>
+                <p>Enter your tracking code to open live delivery status.</p>
+                <form class="footer-mini-form" data-footer-track>
+                    <label class="sr-only" for="footer-tracking-code">Tracking code</label>
+                    <input id="footer-tracking-code" name="tracking_code" type="text" placeholder="E9E7021ECE" autocomplete="off">
+                    <button type="submit" aria-label="Track order">
+                        <i data-lucide="map-pin"></i>
+                    </button>
+                </form>
+
+                <h2>Get updates</h2>
+                <form class="footer-mini-form" data-footer-newsletter>
+                    <label class="sr-only" for="footer-email">Email address</label>
+                    <input id="footer-email" name="email" type="text" inputmode="email" placeholder="you@example.com">
+                    <button type="submit" aria-label="Subscribe">
+                        <i data-lucide="send"></i>
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; {% now "Y" %} Tonmoy Eats. Built for modern food delivery.</span>
+            <div class="footer-social">
+                <a href="mailto:support@tonmoyeats.local" aria-label="Email Tonmoy Eats"><i data-lucide="mail"></i></a>
+                <a href="tel:+919000012345" aria-label="Call Tonmoy Eats"><i data-lucide="phone"></i></a>
+                <a href="{% url 'restaurant_list' %}" aria-label="Browse restaurants"><i data-lucide="utensils"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    {% if not user.is_authenticated %}
+        <div class="auth-modal" data-auth-modal aria-hidden="true">
+            <div class="auth-modal-backdrop" data-auth-modal-close></div>
+            <section class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+                <button class="icon-button auth-modal-close" type="button" data-auth-modal-close aria-label="Close login popup">
+                    <i data-lucide="x"></i>
+                </button>
+                <span class="eyebrow">Join Tonmoy Eats</span>
+                <h2 id="auth-modal-title">Login or sign up first</h2>
+                <p>Create an account to add food to cart, track orders, receive OTP login, and get invoice emails.</p>
+                <div class="auth-modal-actions">
+                    <a class="primary-button" href="{% url 'login' %}">Login</a>
+                    <a class="secondary-button" href="{% url 'register' %}">Sign up</a>
+                </div>
+                <button class="ghost-button auth-modal-later" type="button" data-auth-modal-close>Continue browsing</button>
+            </section>
+        </div>
+    {% endif %}
+
+    <div class="toast" data-toast></div>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="{% static 'food/js/main.js' %}?v=premium-buttons-1"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Tonmoy Eats App Icon</title>
+  <desc id="desc">Rounded square Tonmoy Eats mobile app icon with a stylized T and food delivery motion mark.</desc>
+  <defs>
+    <linearGradient id="appBg" x1="128" y1="96" x2="896" y2="928" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="0.5" stop-color="#E53935"/>
+      <stop offset="1" stop-color="#8E1515"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="34%" cy="18%" r="75%">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.36"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="230" fill="url(#appBg)"/>
+  <path d="M110 138c214-88 554-67 804 82v275C666 363 328 338 110 445V138Z" fill="url(#glow)"/>
+  <path d="M285 660h454" fill="none" stroke="#FFC107" stroke-width="58" stroke-linecap="round"/>
+  <path d="M332 739c63 82 127 122 180 122s117-40 180-122H332Z" fill="#121212"/>
+  <path d="M376 611c30-123 95-190 136-190s106 67 136 190" fill="none" stroke="#FAFAFA" stroke-width="74" stroke-linecap="round"/>
+  <path d="M330 280h364v112H569v306H455V392H330V280Z" fill="#FAFAFA"/>
+  <path d="M711 357h126M766 463h94M734 565h136" fill="none" stroke="#121212" stroke-width="42" stroke-linecap="round"/>
+  <circle cx="730" cy="222" r="52" fill="#FFC107"/>
+</svg>

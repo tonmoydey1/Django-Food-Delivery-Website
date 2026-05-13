@@ -1,0 +1,144 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Tonmoy Eats - Food delivery{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-media" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1800&q=80');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-copy">
+            <span class="eyebrow">Tezpur's premium food delivery</span>
+            <h1>Tonmoy Eats</h1>
+            <p>Discover restaurants, order premium meals, and track every delivery from kitchen to doorstep.</p>
+        </div>
+        <form class="hero-search" action="{% url 'restaurant_list' %}" method="get">
+            <div class="location-picker" data-location-picker>
+                <button class="hero-location" type="button" data-location-toggle aria-haspopup="true" aria-expanded="false">
+                    <i data-lucide="map-pin"></i>
+                    <span class="location-selected" data-location-label>Tezpur</span>
+                    <i data-lucide="chevron-down"></i>
+                </button>
+                <input type="hidden" name="location" value="Tezpur" data-location-input>
+                <div class="location-menu" data-location-menu>
+                    <button type="button" data-location-option="Tezpur">
+                        <strong>Tezpur <em>Available now</em></strong>
+                        <span>Premium delivery across Tezpur city</span>
+                    </button>
+                    <button type="button" data-location-soon="Guwahati">
+                        <strong>Guwahati <em>Coming soon</em></strong>
+                        <span>Launching soon in GS Road, Zoo Road, Beltola</span>
+                    </button>
+                    <button type="button" data-location-soon="Dibrugarh">
+                        <strong>Dibrugarh <em>Coming soon</em></strong>
+                        <span>Launching soon in central Dibrugarh</span>
+                    </button>
+                    <button type="button" data-location-soon="Silchar">
+                        <strong>Silchar <em>Coming soon</em></strong>
+                        <span>Launching soon near main city areas</span>
+                    </button>
+                    <button type="button" data-location-soon="Jorhat">
+                        <strong>Jorhat <em>Coming soon</em></strong>
+                        <span>Premium delivery opens soon</span>
+                    </button>
+                    <button type="button" data-location-detect>
+                        <strong>Use current location</strong>
+                        <span>Allow browser location access</span>
+                    </button>
+                </div>
+            </div>
+            <span class="search-divider" aria-hidden="true"></span>
+            <i data-lucide="search"></i>
+            <input type="search" name="q" placeholder="Search for restaurant, cuisine or dish" aria-label="Search food">
+            <button type="submit">Search</button>
+        </form>
+        <div class="popular-searches" aria-label="Popular searches">
+            <span>Popular:</span>
+            <a href="{% url 'restaurant_list' %}?q=biryani">Biryani</a>
+            <a href="{% url 'restaurant_list' %}?q=pizza">Pizza</a>
+            <a href="{% url 'restaurant_list' %}?q=burger">Burger</a>
+            <a href="{% url 'restaurant_list' %}?q=sushi">Sushi</a>
+        </div>
+        <div class="hero-actions">
+            <a class="primary-button" href="{% url 'restaurant_list' %}">
+                <i data-lucide="utensils"></i>
+                Browse restaurants
+            </a>
+            <a class="secondary-button on-dark" href="{% url 'cart' %}">
+                <i data-lucide="shopping-bag"></i>
+                View cart
+            </a>
+        </div>
+        <div class="hero-stats">
+            <span><strong>{{ restaurants|length }}+</strong> restaurants</span>
+            <span><strong>{{ categories|length }}+</strong> categories</span>
+            <span><strong>{{ average_rating|floatformat:1 }}</strong> average rating</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Categories</span>
+            <h2>Find your next meal</h2>
+            <p class="section-kicker">Fast filters for the cravings people actually order.</p>
+        </div>
+        <a class="text-link" href="{% url 'restaurant_list' %}">View all</a>
+    </div>
+    <div class="category-strip">
+        {% for category in categories %}
+            <a class="category-pill" href="{% url 'restaurant_list' %}?category={{ category.slug }}">
+                <span class="category-image">
+                    {% if category.image_url %}
+                        <img src="{{ category.image_url }}" alt="{{ category.name }}">
+                    {% else %}
+                        <em>{{ category.icon|default:"Food" }}</em>
+                    {% endif %}
+                </span>
+                <span class="category-copy">
+                    <strong>{{ category.name }}</strong>
+                    <small>{{ category.description }}</small>
+                </span>
+            </a>
+        {% empty %}
+            <p>No categories yet. Run the sample data command.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section section-muted home-restaurants">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Restaurants</span>
+            <h2>Popular near you</h2>
+            <p class="section-kicker">Top-rated local kitchens with clear delivery fees and timing.</p>
+        </div>
+        <a class="text-link" href="{% url 'restaurant_list' %}">Browse restaurants</a>
+    </div>
+    <div class="restaurant-grid">
+        {% for restaurant in restaurants %}
+            {% include 'food/restaurant_card.html' %}
+        {% empty %}
+            <p>No restaurants found. Add restaurants in admin or run the seed command.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Featured dishes</span>
+            <h2>Ready for your cart</h2>
+            <p class="section-kicker">Hand-picked dishes from the menus customers come back for.</p>
+        </div>
+    </div>
+    <div class="menu-grid">
+        {% for item in featured_items %}
+            {% include 'food/menu_item_card.html' %}
+        {% empty %}
+            <p>No menu items yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

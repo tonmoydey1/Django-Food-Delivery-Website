@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+<body style="font-family: Arial, sans-serif; color: #17201b;">
+    <h2>Tonmoy Eats order {{ order.tracking_code }} placed</h2>
+    <p>Hi {{ order.customer_name }}, your order with <strong>{{ order.restaurant.name }}</strong> has been placed.</p>
+    <p><strong>Total:</strong> &#8377;{{ order.total }}</p>
+    <p><strong>Payment:</strong> {{ order.get_payment_method_display }} / {{ order.get_payment_status_display }}</p>
+    <p>Your invoice PDF is attached to this email.</p>
+    <p><a href="{{ tracking_url }}">Track your order</a></p>
+</body>
+</html>

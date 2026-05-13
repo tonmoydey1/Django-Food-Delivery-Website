@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Tonmoy Eats Logo</title>
+  <desc id="desc">A premium red and black Tonmoy Eats app logo with a stylized T, serving dome, and delivery motion lines.</desc>
+  <defs>
+    <linearGradient id="bg" x1="16" y1="12" x2="112" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF7043"/>
+      <stop offset="0.46" stop-color="#E53935"/>
+      <stop offset="1" stop-color="#B71C1C"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="28" y1="16" x2="98" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#121212" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#bg)"/>
+  <path d="M15 22c24-13 63-13 97 6v34c-27-15-67-18-97-5V22Z" fill="url(#shine)"/>
+  <path d="M26 84h76" fill="none" stroke="#FFC107" stroke-width="7" stroke-linecap="round" opacity="0.95"/>
+  <path d="M33 93c9 12 21 18 31 18s22-6 31-18H33Z" fill="#121212" opacity="0.92" filter="url(#shadow)"/>
+  <path d="M38 78c4-18 17-29 26-29s22 11 26 29" fill="none" stroke="#FAFAFA" stroke-width="10" stroke-linecap="round"/>
+  <path d="M64 42v-9" fill="none" stroke="#FAFAFA" stroke-width="9" stroke-linecap="round"/>
+  <path d="M39 31h50v15H72v39H56V46H39V31Z" fill="#FAFAFA"/>
+  <path d="M91 44h16M99 56h13M95 68h18" fill="none" stroke="#121212" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="98" cy="28" r="7" fill="#FFC107"/>
+</svg>
