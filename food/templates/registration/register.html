@@ -36,12 +36,22 @@
             <div class="form-grid two">
                 <label class="form-field">
                     <span>Password</span>
-                    {{ form.password1 }}
+                    <span class="password-input-wrap">
+                        {{ form.password1 }}
+                        <button class="password-toggle" type="button" data-password-toggle aria-label="Show password">
+                            <i data-lucide="eye"></i>
+                        </button>
+                    </span>
                     {{ form.password1.errors }}
                 </label>
                 <label class="form-field">
                     <span>Confirm password</span>
-                    {{ form.password2 }}
+                    <span class="password-input-wrap">
+                        {{ form.password2 }}
+                        <button class="password-toggle" type="button" data-password-toggle aria-label="Show password">
+                            <i data-lucide="eye"></i>
+                        </button>
+                    </span>
                     {{ form.password2.errors }}
                 </label>
             </div>

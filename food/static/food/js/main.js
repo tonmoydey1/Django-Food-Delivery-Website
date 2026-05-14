@@ -58,6 +58,11 @@
             });
         }
 
+        const passwordToggle = event.target.closest("[data-password-toggle]");
+        if (passwordToggle) {
+            togglePasswordVisibility(passwordToggle);
+        }
+
         const locationPicker = event.target.closest("[data-location-picker]");
         if (!locationPicker) {
             closeLocationMenus();
@@ -168,6 +173,22 @@
         document.querySelectorAll(selector).forEach((node) => {
             node.textContent = value;
         });
+    }
+
+    function togglePasswordVisibility(button) {
+        const wrap = button.closest(".password-input-wrap");
+        const input = wrap?.querySelector("input");
+        if (!input) {
+            return;
+        }
+        const shouldShow = input.type === "password";
+        input.type = shouldShow ? "text" : "password";
+        button.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+        button.classList.toggle("is-visible", shouldShow);
+        button.innerHTML = shouldShow ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
     }
 
     function setupLocationPicker() {
@@ -314,15 +335,35 @@
                     setText("[data-live-status]", data.status_label);
                     const progress = node.querySelector("[data-live-progress]");
                     const marker = node.querySelector("[data-live-marker]");
+                    const progressLabel = node.querySelector("[data-live-progress-label]");
+                    const progressRing = node.querySelector(".tracking-progress-ring");
                     if (progress) {
                         progress.style.width = `${data.progress}%`;
                     }
                     if (marker) {
                         marker.style.left = `${data.progress}%`;
                     }
+                    if (progressLabel) {
+                        progressLabel.textContent = `${data.progress}%`;
+                    }
+                    if (progressRing) {
+                        progressRing.style.setProperty("--track-progress", `${data.progress}%`);
+                    }
+                    const currentStep = [...data.steps].reverse().find((entry) => entry.complete);
                     node.querySelectorAll("[data-step]").forEach((step) => {
                         const current = data.steps.find((entry) => entry.key === step.dataset.step);
                         step.classList.toggle("complete", Boolean(current?.complete));
+                        step.classList.toggle("current", currentStep?.key === step.dataset.step);
+                        const stepState = step.querySelector("small");
+                        if (stepState) {
+                            if (currentStep?.key === step.dataset.step) {
+                                stepState.textContent = "In progress now";
+                            } else if (current?.complete) {
+                                stepState.textContent = "Completed";
+                            } else {
+                                stepState.textContent = "Coming up";
+                            }
+                        }
                     });
                 })
                 .catch(() => {});

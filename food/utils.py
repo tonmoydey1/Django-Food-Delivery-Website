@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.html import escape
 from django.utils import timezone
 
 from .models import Order
@@ -66,6 +67,35 @@ def send_register_otp_email(email_address, name, otp_code):
         '<p>Use this OTP to finish creating your Tonmoy Eats account:</p>'
         f'<p style="font-size: 28px; font-weight: 800; letter-spacing: 4px;">{otp_code}</p>'
         '<p>This OTP is valid for 10 minutes.</p>'
+        '</div>'
+    )
+    email = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [email_address])
+    email.attach_alternative(html_body, 'text/html')
+    return send_email_safely(email)
+
+
+def send_username_reminder_email(email_address, users):
+    usernames = [user.username for user in users]
+    if not usernames:
+        return True
+
+    subject = 'Your Tonmoy Eats username reminder'
+    joined_usernames = '\n'.join(f'- {username}' for username in usernames)
+    html_usernames = ''.join(f'<li>{escape(username)}</li>' for username in usernames)
+    text_body = (
+        'Hi,\n\n'
+        'You asked us to remind you of the Tonmoy Eats username linked to this email address.\n\n'
+        f'{joined_usernames}\n\n'
+        'You can now return to the login page and continue with password + OTP login.\n\n'
+        'If you did not request this, you can ignore this email.'
+    )
+    html_body = (
+        '<div style="font-family: Arial, sans-serif; color: #1c1c1c;">'
+        '<h2 style="color: #e23744;">Tonmoy Eats username reminder</h2>'
+        '<p>You asked us to remind you of the username linked to this email address.</p>'
+        f'<ul style="font-size: 18px; font-weight: 800;">{html_usernames}</ul>'
+        '<p>You can now return to the login page and continue with password + OTP login.</p>'
+        '<p>If you did not request this, you can ignore this email.</p>'
         '</div>'
     )
     email = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [email_address])

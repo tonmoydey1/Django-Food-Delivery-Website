@@ -190,6 +190,36 @@ class FoodFlowTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], f'{reverse("login")}?csrf=expired')
 
+    def test_forgot_username_sends_reminder_email(self):
+        user = User.objects.create_user(
+            username='remindbuyer',
+            password='secret',
+            email='remind@example.com',
+        )
+
+        response = self.client.post(reverse('forgot_username'), data={'email': user.email})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], reverse('forgot_username_done'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('username reminder', mail.outbox[0].subject)
+        self.assertIn(user.username, mail.outbox[0].body)
+
+    def test_password_reset_sends_secure_link(self):
+        user = User.objects.create_user(
+            username='resetbuyer',
+            password='secret',
+            email='reset@example.com',
+        )
+
+        response = self.client.post(reverse('password_reset'), data={'email': user.email})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], reverse('password_reset_done'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('Reset your Tonmoy Eats password', mail.outbox[0].subject)
+        self.assertIn('/reset/', mail.outbox[0].body)
+
     def test_register_requires_email_otp_then_logs_in(self):
         registration_data = {
             'action': 'start_registration',

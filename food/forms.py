@@ -1,8 +1,28 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm, UserCreationForm
 from django.contrib.auth.models import User
 
 from .models import Order, UserProfile
+
+
+class StyledPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        apply_form_styles(self)
+
+
+class StyledSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        apply_form_styles(self)
+
+
+class UsernameReminderForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'inputmode': 'email'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        apply_form_styles(self)
 
 
 class RegisterForm(UserCreationForm):

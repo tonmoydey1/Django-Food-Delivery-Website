@@ -22,13 +22,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from .cart import Cart, CartRestaurantMismatch
-from .forms import CheckoutForm, ProfileForm, RegisterForm, UserUpdateForm
+from .forms import CheckoutForm, ProfileForm, RegisterForm, UsernameReminderForm, UserUpdateForm
 from .models import Category, MenuItem, Order, OrderItem, Payment, PremiumPayment, Restaurant
 from .utils import (
     render_invoice_pdf,
     send_login_otp_email,
     send_order_confirmation_email,
     send_register_otp_email,
+    send_username_reminder_email,
     tracking_payload,
 )
 
@@ -126,8 +127,17 @@ def restaurant_list(request):
     else:
         restaurants = sorted(restaurants, key=lambda restaurant: (restaurant.is_featured, restaurant.rating), reverse=True)
 
+    open_restaurant_count = sum(1 for restaurant in restaurants if restaurant.is_open_now)
+    average_delivery_time = (
+        round(sum(restaurant.delivery_time for restaurant in restaurants) / len(restaurants))
+        if restaurants
+        else 0
+    )
+
     context = {
         'restaurants': restaurants,
+        'open_restaurant_count': open_restaurant_count,
+        'average_delivery_time': average_delivery_time,
         'categories': Category.objects.all(),
         'cuisines': Restaurant.objects.filter(is_active=True).values_list('cuisine', flat=True).distinct().order_by('cuisine'),
         'filters': {
@@ -442,11 +452,22 @@ def profile(request):
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
-    recent_orders = request.user.orders.select_related('restaurant')[:5]
+    orders = request.user.orders.select_related('restaurant')
+    profile_stats = {
+        'total_orders': orders.count(),
+        'active_orders': orders.exclude(status__in=[Order.STATUS_DELIVERED, Order.STATUS_CANCELLED]).count(),
+        'total_spent': orders.aggregate(total=Sum('total'))['total'] or Decimal('0.00'),
+    }
+    recent_orders = orders[:5]
     return render(
         request,
         'food/profile.html',
-        {'user_form': user_form, 'profile_form': profile_form, 'recent_orders': recent_orders},
+        {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'recent_orders': recent_orders,
+            'profile_stats': profile_stats,
+        },
     )
 
 
@@ -719,7 +740,7 @@ def login_view(request):
     if request.GET.get('csrf') == 'expired':
         messages.warning(request, 'Security token expired. Please submit the refreshed form again.')
 
-    password_form = AuthenticationForm(request, data=request.POST or None)
+    password_form = AuthenticationForm(request)
     otp_email = request.session.get('login_otp_email', '')
     otp_pending = bool(request.session.get('login_otp_code'))
 
@@ -738,6 +759,11 @@ def login_view(request):
                     )
                 else:
                     messages.error(request, 'Password verified, but OTP could not be sent. Add an email and check SMTP settings.')
+            else:
+                clear_login_otp(request)
+                otp_pending = False
+                otp_email = ''
+                messages.error(request, 'Username or password is incorrect. OTP was not sent.')
         elif action == 'send_otp':
             email = request.POST.get('otp_email', '').strip().lower()
             user = User.objects.filter(email__iexact=email, is_active=True).first()
@@ -755,6 +781,27 @@ def login_view(request):
                     )
                 else:
                     messages.error(request, 'OTP could not be sent. Add an email and check SMTP settings.')
+        elif action == 'resend_otp':
+            user_id = request.session.get('login_otp_user_id')
+            if not user_id:
+                clear_login_otp(request)
+                otp_pending = False
+                otp_email = ''
+                messages.error(request, 'Please enter your username and password again to request an OTP.')
+            else:
+                user = User.objects.filter(id=user_id, is_active=True).first()
+                if not user:
+                    clear_login_otp(request)
+                    otp_pending = False
+                    otp_email = ''
+                    messages.error(request, 'This account is no longer active. Please contact support.')
+                else:
+                    otp_started, otp_email = start_login_otp(request, user)
+                    otp_pending = otp_started
+                    if otp_started:
+                        messages.success(request, f'A new OTP was sent to {mask_email(otp_email)}.')
+                    else:
+                        messages.error(request, 'OTP could not be resent. Check SMTP settings and try again.')
         elif action == 'verify_otp':
             otp_code = request.POST.get('otp_code', '').strip()
             user_id = request.session.get('login_otp_user_id')
@@ -784,6 +831,34 @@ def login_view(request):
             'otp_pending': otp_pending,
     }
     return render(request, 'registration/login.html', context)
+
+
+@never_cache
+def forgot_username(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
+
+    if request.method == 'POST':
+        form = UsernameReminderForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email'].strip().lower()
+            users = list(User.objects.filter(email__iexact=email, is_active=True).order_by('date_joined'))
+            email_sent = send_username_reminder_email(email, users)
+            if users and not email_sent:
+                messages.error(request, 'Username reminder could not be sent. Check SMTP settings.')
+            else:
+                request.session['recovery_email'] = email
+                return redirect('forgot_username_done')
+    else:
+        form = UsernameReminderForm()
+
+    return render(request, 'registration/forgot_username.html', {'form': form})
+
+
+@never_cache
+def forgot_username_done(request):
+    recovery_email = request.session.pop('recovery_email', '')
+    return render(request, 'registration/forgot_username_done.html', {'recovery_email': recovery_email})
 
 
 def generate_otp_code():

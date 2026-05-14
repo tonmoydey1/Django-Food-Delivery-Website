@@ -3,17 +3,34 @@
 {% block title %}Checkout - Tonmoy Eats{% endblock %}
 
 {% block content %}
-<section class="page-hero compact-hero">
-    <div>
+<section class="commerce-hero checkout-commerce-hero">
+    <div class="commerce-hero-copy">
         <span class="eyebrow">Checkout</span>
         <h1>Delivery and payment</h1>
-        <p>Confirm your address, choose a payment method, and place the order.</p>
+        <p>Confirm your delivery details, choose how you want to pay, and place your Tonmoy Eats order.</p>
+        <div class="commerce-hero-meta">
+            <span><i data-lucide="map-pin"></i>Tezpur delivery</span>
+            <span><i data-lucide="timer"></i>{% if cart.restaurant %}{{ cart.restaurant.delivery_time }} min estimate{% else %}Fast delivery{% endif %}</span>
+            <span><i data-lucide="receipt-text"></i>PDF invoice</span>
+        </div>
+    </div>
+    <div class="checkout-steps">
+        <span class="complete"><i data-lucide="check"></i>Cart</span>
+        <span class="active"><i data-lucide="map-pin"></i>Delivery</span>
+        <span><i data-lucide="receipt-text"></i>Confirmation</span>
     </div>
 </section>
 
-<section class="section checkout-layout">
-    <form class="checkout-form" method="post" novalidate>
+<section class="section checkout-layout premium-checkout-layout">
+    <form class="checkout-form premium-delivery-form" method="post" novalidate>
         {% csrf_token %}
+        <div class="checkout-form-head">
+            <span class="form-step-icon"><i data-lucide="user-round"></i></span>
+            <div>
+                <span class="eyebrow">Contact</span>
+                <h2>Who should receive the order?</h2>
+            </div>
+        </div>
         <div class="form-grid two">
             <label class="form-field">
                 <span>First name</span>
@@ -35,6 +52,14 @@
                 {{ form.phone }}
                 {{ form.phone.errors }}
             </label>
+        </div>
+
+        <div class="checkout-form-head section-divider-head">
+            <span class="form-step-icon"><i data-lucide="map-pin"></i></span>
+            <div>
+                <span class="eyebrow">Delivery</span>
+                <h2>Where should we deliver?</h2>
+            </div>
         </div>
         <label class="form-field">
             <span>Street address</span>
@@ -58,19 +83,33 @@
             {{ form.delivery_notes }}
             {{ form.delivery_notes.errors }}
         </label>
-        <div class="payment-options">
+
+        <div class="checkout-form-head section-divider-head">
+            <span class="form-step-icon"><i data-lucide="wallet-cards"></i></span>
+            <div>
+                <span class="eyebrow">Payment</span>
+                <h2>Choose payment method</h2>
+            </div>
+        </div>
+        <div class="payment-options premium-payment-options">
             <span>Payment method</span>
             {{ form.payment_method }}
             {{ form.payment_method.errors }}
         </div>
-        <button class="primary-button" type="submit">
+        <button class="primary-button checkout-submit-button" type="submit">
             <i data-lucide="check-circle"></i>
-            Place order
+            Place order securely
         </button>
     </form>
 
-    <aside class="summary-panel">
-        <h2>Order summary</h2>
+    <aside class="summary-panel premium-order-summary checkout-summary-card">
+        <div class="summary-heading">
+            <span class="summary-icon"><i data-lucide="receipt-text"></i></span>
+            <div>
+                <span class="eyebrow">Receipt</span>
+                <h2>Order summary</h2>
+            </div>
+        </div>
         {% if user.is_authenticated and user.profile.premium_active %}
             <div class="premium-summary-badge">
                 <i data-lucide="crown"></i>
@@ -78,12 +117,14 @@
                 <strong>Free delivery + {{ cart.premium_discount_percent }}% off</strong>
             </div>
         {% endif %}
-        {% for row in cart_items %}
-            <div class="mini-order-row">
-                <span>{{ row.quantity }} x {{ row.item.name }}</span>
-                <strong>&#8377;{{ row.line_total }}</strong>
-            </div>
-        {% endfor %}
+        <div class="checkout-mini-list">
+            {% for row in cart_items %}
+                <div class="mini-order-row">
+                    <span>{{ row.quantity }} x {{ row.item.name }}</span>
+                    <strong>&#8377;{{ row.line_total }}</strong>
+                </div>
+            {% endfor %}
+        </div>
         <div class="summary-line">
             <span>Subtotal</span>
             <strong>&#8377;{{ cart.subtotal }}</strong>
@@ -103,6 +144,13 @@
         <div class="summary-total">
             <span>Total</span>
             <strong>&#8377;{{ cart.total }}</strong>
+        </div>
+        <div class="delivery-promise">
+            <span><i data-lucide="bike"></i></span>
+            <div>
+                <strong>Live tracking after order</strong>
+                <small>Invoice and confirmation email are sent automatically.</small>
+            </div>
         </div>
     </aside>
 </section>
