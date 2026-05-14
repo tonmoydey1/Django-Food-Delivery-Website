@@ -3,61 +3,241 @@
 {% block title %}Order {{ order.tracking_code }} - Tonmoy Eats{% endblock %}
 
 {% block content %}
-<section class="page-hero compact-hero">
-    <div>
+<section class="order-detail-hero">
+    <div class="order-detail-hero-copy">
         <span class="eyebrow">Order details</span>
-        <h1>{{ order.tracking_code }}</h1>
-        <p>{{ order.get_status_display }} from {{ order.restaurant.name }}</p>
+        <h1>Order {{ order.tracking_code }}</h1>
+        <p>{{ order.restaurant.name }} is handling your meal from kitchen to doorstep in {{ order.city }}.</p>
+        <div class="order-detail-hero-meta">
+            <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+            <span><i data-lucide="calendar-clock"></i>{{ order.created_at|date:"M d, Y h:i A" }}</span>
+            <span><i data-lucide="store"></i>{{ order.restaurant.name }}</span>
+        </div>
+        <div class="order-detail-hero-actions">
+            <a class="primary-button" href="{% url 'order_tracking' order.tracking_code %}">
+                <i data-lucide="map-pin"></i>
+                Track live
+            </a>
+            <a class="secondary-button hero-glass-button" href="{% url 'invoice_pdf' order.tracking_code %}">
+                <i data-lucide="file-text"></i>
+                Invoice
+            </a>
+        </div>
     </div>
-    <a class="primary-button" href="{% url 'order_tracking' order.tracking_code %}">
-        <i data-lucide="map"></i>
-        Track order
-    </a>
+    <div class="order-detail-progress-card">
+        <small class="order-code-chip">{{ order.tracking_code }}</small>
+        <span>Delivery progress</span>
+        <strong>{{ tracking.progress }}%</strong>
+        <div class="order-detail-progress-ring" style="--track-progress: {{ tracking.progress }}%;">
+            <i data-lucide="bike"></i>
+        </div>
+        <small>{{ tracking.status_label }}</small>
+        <div class="order-courier-mini">
+            <i data-lucide="headphones"></i>
+            <span>{{ tracking.courier.name }}</span>
+        </div>
+    </div>
 </section>
 
-<section class="section order-detail-layout">
-    <div class="detail-panel">
-        <h2>Items</h2>
-        {% for item in order.items.all %}
-            <div class="mini-order-row">
-                <span>{{ item.quantity }} x {{ item.name }}</span>
-                <strong>&#8377;{{ item.line_total }}</strong>
+<section class="section order-detail-layout premium-order-detail">
+    <div class="order-detail-main">
+        <section class="detail-panel order-detail-card order-items-card">
+            <div class="order-section-head">
+                <div>
+                    <span class="eyebrow">Your meal</span>
+                    <h2>Items in this order</h2>
+                </div>
+                <span class="order-count-pill">{{ order.items.count }} item{{ order.items.count|pluralize }}</span>
             </div>
-        {% endfor %}
+
+            <div class="order-item-list">
+                {% for item in order.items.all %}
+                    <article class="order-item-card">
+                        <div class="order-item-media">
+                            {% if item.menu_item and item.menu_item.image_url %}
+                                <img src="{{ item.menu_item.image_url }}" alt="{{ item.name }}">
+                            {% else %}
+                                <span>{{ item.name|slice:":1"|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="order-item-copy">
+                            <strong>{{ item.name }}</strong>
+                            <span>&#8377;{{ item.price }} each</span>
+                        </div>
+                        <span class="quantity-pill">x{{ item.quantity }}</span>
+                        <strong class="order-item-total">&#8377;{{ item.line_total }}</strong>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="detail-panel order-detail-card delivery-detail-card">
+            <div class="order-section-head">
+                <div>
+                    <span class="eyebrow">Drop details</span>
+                    <h2>Delivery and customer</h2>
+                </div>
+                <a class="text-link" href="tel:{{ order.phone }}">
+                    <i data-lucide="phone"></i>
+                    Call
+                </a>
+            </div>
+
+            <div class="delivery-detail-grid">
+                <article>
+                    <span class="detail-icon"><i data-lucide="map-pin"></i></span>
+                    <div>
+                        <span>Deliver to</span>
+                        <strong>{{ order.address }}</strong>
+                        <small>{{ order.city }} {{ order.postcode }}</small>
+                    </div>
+                </article>
+                <article>
+                    <span class="detail-icon"><i data-lucide="user-round"></i></span>
+                    <div>
+                        <span>Customer</span>
+                        <strong>{{ order.customer_name }}</strong>
+                        <small>{{ order.email }}</small>
+                    </div>
+                </article>
+                <article>
+                    <span class="detail-icon"><i data-lucide="phone-call"></i></span>
+                    <div>
+                        <span>Phone</span>
+                        <strong>{{ order.phone }}</strong>
+                        <small>Used for delivery updates</small>
+                    </div>
+                </article>
+                <article>
+                    <span class="detail-icon"><i data-lucide="message-square-text"></i></span>
+                    <div>
+                        <span>Delivery notes</span>
+                        <strong>{% if order.delivery_notes %}{{ order.delivery_notes }}{% else %}No special notes{% endif %}</strong>
+                        <small>Shared with the courier</small>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="detail-panel order-detail-card kitchen-detail-card">
+            <div class="order-section-head">
+                <div>
+                    <span class="eyebrow">Kitchen</span>
+                    <h2>Restaurant snapshot</h2>
+                </div>
+                <a class="text-link" href="tel:{{ order.restaurant.phone }}">
+                    <i data-lucide="phone"></i>
+                    Call restaurant
+                </a>
+            </div>
+            <div class="kitchen-snapshot">
+                <article>
+                    <span class="detail-icon"><i data-lucide="utensils"></i></span>
+                    <div>
+                        <span>Cuisine</span>
+                        <strong>{{ order.restaurant.cuisine }}</strong>
+                    </div>
+                </article>
+                <article>
+                    <span class="detail-icon"><i data-lucide="star"></i></span>
+                    <div>
+                        <span>Rating</span>
+                        <strong>{{ order.restaurant.rating }}</strong>
+                    </div>
+                </article>
+                <article>
+                    <span class="detail-icon"><i data-lucide="clock-3"></i></span>
+                    <div>
+                        <span>Estimated time</span>
+                        <strong>{{ order.restaurant.delivery_time }} min</strong>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="detail-panel order-detail-card order-progress-card">
+            <div class="order-section-head">
+                <div>
+                    <span class="eyebrow">Timeline</span>
+                    <h2>Order progress</h2>
+                </div>
+                <a class="text-link" href="{% url 'order_tracking' order.tracking_code %}">
+                    <i data-lucide="map"></i>
+                    Live map
+                </a>
+            </div>
+            <div class="compact-order-timeline">
+                {% for step in tracking.steps %}
+                    <div class="compact-timeline-step {% if step.complete %}complete{% endif %}{% if step.key == order.status %} current{% endif %}">
+                        <span><i data-lucide="{% if step.complete %}check{% else %}circle{% endif %}"></i></span>
+                        <strong>{{ step.label }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
-    <aside class="summary-panel">
-        <h2>Payment</h2>
-        <div class="summary-line">
-            <span>Method</span>
+
+    <aside class="summary-panel premium-receipt-panel">
+        <div class="receipt-head">
+            <span class="receipt-icon"><i data-lucide="receipt-text"></i></span>
+            <div>
+                <span class="eyebrow">Receipt</span>
+                <h2>Payment summary</h2>
+            </div>
+        </div>
+
+        <div class="payment-state payment-{{ order.payment_status }}">
+            <span>{{ order.get_payment_status_display }}</span>
             <strong>{{ order.get_payment_method_display }}</strong>
+            {% if order.paid_at %}
+                <small>Paid on {{ order.paid_at|date:"M d, Y h:i A" }}</small>
+            {% else %}
+                <small>Order total is ready for settlement</small>
+            {% endif %}
         </div>
-        <div class="summary-line">
-            <span>Status</span>
-            <strong>{{ order.get_payment_status_display }}</strong>
+
+        <div class="receipt-lines">
+            <div class="summary-line">
+                <span>Subtotal</span>
+                <strong>&#8377;{{ order.subtotal }}</strong>
+            </div>
+            {% if order.discount %}
+                <div class="summary-line discount-line">
+                    <span>Premium discount</span>
+                    <strong>-&#8377;{{ order.discount }}</strong>
+                </div>
+            {% endif %}
+            <div class="summary-line">
+                <span>Delivery</span>
+                <strong>&#8377;{{ order.delivery_fee }}</strong>
+            </div>
+            <div class="summary-line">
+                <span>Tax</span>
+                <strong>&#8377;{{ order.tax }}</strong>
+            </div>
         </div>
-        <div class="summary-line">
-            <span>Subtotal</span>
-            <strong>&#8377;{{ order.subtotal }}</strong>
-        </div>
-        <div class="summary-line">
-            <span>Delivery</span>
-            <strong>&#8377;{{ order.delivery_fee }}</strong>
-        </div>
-        <div class="summary-line">
-            <span>Tax</span>
-            <strong>&#8377;{{ order.tax }}</strong>
-        </div>
-        <div class="summary-total">
-            <span>Total</span>
+
+        <div class="summary-total receipt-total">
+            <span>{% if order.payment_status == 'paid' %}Total paid{% else %}Total due{% endif %}</span>
             <strong>&#8377;{{ order.total }}</strong>
         </div>
-        {% if order.payment_method == 'card' and order.payment_status != 'paid' %}
-            <a class="primary-button full-width" href="{% url 'payment_start' order.tracking_code %}">Pay now</a>
-        {% endif %}
-        <a class="secondary-button full-width" href="{% url 'invoice_pdf' order.tracking_code %}">
-            <i data-lucide="file-text"></i>
-            Invoice PDF
-        </a>
+
+        <div class="receipt-actions">
+            {% if order.payment_method == 'card' and order.payment_status != 'paid' %}
+                <a class="primary-button full-width" href="{% url 'payment_start' order.tracking_code %}">
+                    <i data-lucide="credit-card"></i>
+                    Pay now
+                </a>
+            {% endif %}
+            <a class="secondary-button full-width" href="{% url 'order_tracking' order.tracking_code %}">
+                <i data-lucide="map-pin"></i>
+                Track order
+            </a>
+            <a class="secondary-button full-width" href="{% url 'invoice_pdf' order.tracking_code %}">
+                <i data-lucide="file-text"></i>
+                Invoice PDF
+            </a>
+        </div>
     </aside>
 </section>
 {% endblock %}

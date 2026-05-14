@@ -18,15 +18,15 @@ Open `http://127.0.0.1:8000/`.
 
 ## Environment Variables
 
-Secrets are not stored in the repository. Use `.env.example` as a reference and set values in PowerShell before running the server:
+Secrets are not stored in the repository. Copy `.env.example` to `.env`, add your real values, and restart the server. Django loads `.env` automatically for local development.
+
+PowerShell copy command:
 
 ```powershell
-$env:DJANGO_SECRET_KEY="change-me"
-$env:STRIPE_SECRET_KEY="sk_test_..."
-$env:STRIPE_PUBLISHABLE_KEY="pk_test_..."
-$env:EMAIL_HOST_USER="your-email@gmail.com"
-$env:EMAIL_HOST_PASSWORD="your-app-password"
+Copy-Item .env.example .env
 ```
+
+Then edit `.env` and set `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `EMAIL_HOST_USER`, and `EMAIL_HOST_PASSWORD`. Keep `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend` when you want Gmail to send real emails.
 
 ## Payment
 
@@ -42,6 +42,16 @@ The webhook endpoint is `/stripe/webhook/`.
 ## Email
 
 Development email uses Django's console email backend by default, so OTP and order emails print in the terminal. Set `EMAIL_BACKEND`, SMTP host, and credentials in environment variables for real email delivery.
+
+## Deployment
+
+This repo includes Render deployment files:
+
+- `render.yaml` creates the web service and PostgreSQL database.
+- `build.sh` installs dependencies, collects static files, runs migrations, and seeds starter data.
+- `.python-version` pins the deploy runtime to Python 3.13.
+
+Read [DEPLOYMENT.md](DEPLOYMENT.md) before deploying so email OTP, Stripe card payments, Premium subscriptions, and invoice emails are configured correctly in production.
 
 ## Main Modules
 

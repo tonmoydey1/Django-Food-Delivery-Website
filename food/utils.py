@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.html import escape
 from django.utils import timezone
 
 from .models import Order
@@ -73,6 +74,35 @@ def send_register_otp_email(email_address, name, otp_code):
     return send_email_safely(email)
 
 
+def send_username_reminder_email(email_address, users):
+    usernames = [user.username for user in users]
+    if not usernames:
+        return True
+
+    subject = 'Your Tonmoy Eats username reminder'
+    joined_usernames = '\n'.join(f'- {username}' for username in usernames)
+    html_usernames = ''.join(f'<li>{escape(username)}</li>' for username in usernames)
+    text_body = (
+        'Hi,\n\n'
+        'You asked us to remind you of the Tonmoy Eats username linked to this email address.\n\n'
+        f'{joined_usernames}\n\n'
+        'You can now return to the login page and continue with password + OTP login.\n\n'
+        'If you did not request this, you can ignore this email.'
+    )
+    html_body = (
+        '<div style="font-family: Arial, sans-serif; color: #1c1c1c;">'
+        '<h2 style="color: #e23744;">Tonmoy Eats username reminder</h2>'
+        '<p>You asked us to remind you of the username linked to this email address.</p>'
+        f'<ul style="font-size: 18px; font-weight: 800;">{html_usernames}</ul>'
+        '<p>You can now return to the login page and continue with password + OTP login.</p>'
+        '<p>If you did not request this, you can ignore this email.</p>'
+        '</div>'
+    )
+    email = EmailMultiAlternatives(subject, text_body, settings.DEFAULT_FROM_EMAIL, [email_address])
+    email.attach_alternative(html_body, 'text/html')
+    return send_email_safely(email)
+
+
 def send_order_status_email(order, request=None):
     subject = f'Order {order.tracking_code}: {order.get_status_display()}'
     context = {'order': order, 'tracking_url': absolute_tracking_url(order, request)}
@@ -97,6 +127,8 @@ def absolute_tracking_url(order, request=None):
     path = reverse('order_tracking', kwargs={'tracking_code': order.tracking_code})
     if request:
         return request.build_absolute_uri(path)
+    if settings.SITE_URL:
+        return f'{settings.SITE_URL}{path}'
     return path
 
 

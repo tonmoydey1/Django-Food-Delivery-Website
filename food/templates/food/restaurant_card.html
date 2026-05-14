@@ -1,11 +1,19 @@
-<article class="restaurant-card">
+<article class="restaurant-card {% if restaurant.is_featured %}is-featured{% endif %}">
     <a class="restaurant-image" href="{{ restaurant.get_absolute_url }}">
         {% if restaurant.cover_image %}
             <img src="{{ restaurant.cover_image }}" alt="{{ restaurant.name }}">
+        {% else %}
+            <span class="restaurant-image-fallback">TONMOY EATS</span>
         {% endif %}
         <span class="status-badge {% if restaurant.is_open_now %}is-open{% endif %}">
             {% if restaurant.is_open_now %}Open{% else %}Closed{% endif %}
         </span>
+        {% if restaurant.is_featured %}
+            <span class="restaurant-feature-badge">
+                <i data-lucide="sparkles"></i>
+                Featured
+            </span>
+        {% endif %}
     </a>
     <div class="restaurant-body">
         <div>
@@ -19,7 +27,10 @@
         </div>
         <div class="card-footer">
             <span>{{ restaurant.cuisine }}</span>
-            <a class="small-button" href="{{ restaurant.get_absolute_url }}">Order</a>
+            <a class="small-button" href="{{ restaurant.get_absolute_url }}">
+                Order
+                <i data-lucide="arrow-right"></i>
+            </a>
         </div>
     </div>
 </article>

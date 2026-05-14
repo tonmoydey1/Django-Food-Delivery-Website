@@ -1,7 +1,8 @@
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path, reverse_lazy
 
 from . import views
+from .forms import StyledPasswordResetForm, StyledSetPasswordForm
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -29,5 +30,38 @@ urlpatterns = [
     path('premium/', views.premium, name='premium'),
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
+    path('forgot-username/', views.forgot_username, name='forgot_username'),
+    path('forgot-username/done/', views.forgot_username_done, name='forgot_username_done'),
+    path(
+        'password-reset/',
+        auth_views.PasswordResetView.as_view(
+            template_name='food/registration/password_reset_form.html',
+            email_template_name='food/registration/password_reset_email.txt',
+            html_email_template_name='food/registration/password_reset_email.html',
+            subject_template_name='food/registration/password_reset_subject.txt',
+            form_class=StyledPasswordResetForm,
+            success_url=reverse_lazy('password_reset_done'),
+        ),
+        name='password_reset',
+    ),
+    path(
+        'password-reset/done/',
+        auth_views.PasswordResetDoneView.as_view(template_name='food/registration/password_reset_done.html'),
+        name='password_reset_done',
+    ),
+    path(
+        'reset/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name='food/registration/password_reset_confirm.html',
+            form_class=StyledSetPasswordForm,
+            success_url=reverse_lazy('password_reset_complete'),
+        ),
+        name='password_reset_confirm',
+    ),
+    path(
+        'reset/done/',
+        auth_views.PasswordResetCompleteView.as_view(template_name='food/registration/password_reset_complete.html'),
+        name='password_reset_complete',
+    ),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

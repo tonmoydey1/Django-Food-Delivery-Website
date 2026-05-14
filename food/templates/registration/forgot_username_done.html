@@ -1,0 +1,24 @@
+{% extends 'food/base.html' %}
+
+{% block title %}Username email sent - Tonmoy Eats{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-card recovery-card">
+        <span class="eyebrow">Check your inbox</span>
+        <h1>Username reminder sent</h1>
+        <p class="auth-helper">
+            If an active Tonmoy Eats account exists{% if recovery_email %} for <strong>{{ recovery_email }}</strong>{% endif %},
+            the username reminder has been sent.
+        </p>
+        <div class="auth-success-panel">
+            <i data-lucide="shield-check"></i>
+            <span>For security, we do not show account usernames directly on this page.</span>
+        </div>
+        <div class="recovery-actions">
+            <a class="primary-button full-width" href="{% url 'login' %}">Back to login</a>
+            <a class="secondary-button full-width" href="{% url 'password_reset' %}">Reset password</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

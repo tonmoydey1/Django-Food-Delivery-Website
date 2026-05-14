@@ -3,75 +3,181 @@
 {% block title %}Profile - Tonmoy Eats{% endblock %}
 
 {% block content %}
-<section class="page-hero compact-hero">
-    <div>
+<section class="profile-hero">
+    <div class="profile-hero-copy">
         <span class="eyebrow">Profile</span>
         <h1>{{ user.get_full_name|default:user.username }}</h1>
-        <p>Keep your delivery details ready for faster checkout.</p>
+        <p>Keep your delivery details, contact information, and Tonmoy Eats activity ready for faster checkout.</p>
+        <div class="profile-hero-meta">
+            <span><i data-lucide="mail"></i>{{ user.email|default:"Add email" }}</span>
+            <span><i data-lucide="map-pin"></i>{{ user.profile.city|default:"Add city" }}</span>
+            {% if user.profile.premium_active %}
+                <span><i data-lucide="crown"></i>{{ user.profile.get_premium_plan_display }} Premium</span>
+            {% else %}
+                <span><i data-lucide="sparkles"></i>Standard account</span>
+            {% endif %}
+        </div>
     </div>
+    <aside class="profile-identity-card">
+        <div class="profile-avatar-large">
+            {% if user.profile.avatar_url %}
+                <img src="{{ user.profile.avatar_url }}" alt="{{ user.get_full_name|default:user.username }}">
+            {% else %}
+                <span>{{ user.username|slice:":1"|upper }}</span>
+            {% endif %}
+        </div>
+        <strong>{{ user.username }}</strong>
+        <small>Member since {{ user.date_joined|date:"M Y" }}</small>
+        {% if user.profile.premium_active %}
+            <a class="secondary-button hero-glass-button" href="{% url 'premium' %}">
+                <i data-lucide="crown"></i>
+                Manage Premium
+            </a>
+        {% else %}
+            <a class="primary-button" href="{% url 'premium' %}">
+                <i data-lucide="crown"></i>
+                Go Premium
+            </a>
+        {% endif %}
+    </aside>
 </section>
 
-<section class="section profile-layout">
-    <form class="profile-form" method="post">
-        {% csrf_token %}
-        <div class="form-grid two">
-            <label class="form-field">
-                <span>First name</span>
-                {{ user_form.first_name }}
-            </label>
-            <label class="form-field">
-                <span>Last name</span>
-                {{ user_form.last_name }}
-            </label>
-        </div>
-        <label class="form-field">
-            <span>Email</span>
-            {{ user_form.email }}
-        </label>
-        <div class="form-grid two">
-            <label class="form-field">
-                <span>Phone</span>
-                {{ profile_form.phone }}
-            </label>
-            <label class="form-field">
-                <span>Postcode</span>
-                {{ profile_form.postcode }}
-            </label>
-        </div>
-        <label class="form-field">
-            <span>Address</span>
-            {{ profile_form.address }}
-        </label>
-        <div class="form-grid two">
-            <label class="form-field">
-                <span>City</span>
-                {{ profile_form.city }}
-            </label>
-            <label class="form-field">
-                <span>Avatar URL</span>
-                {{ profile_form.avatar_url }}
-            </label>
-        </div>
-        <label class="form-field">
-            <span>Delivery notes</span>
-            {{ profile_form.delivery_notes }}
-        </label>
-        <button class="primary-button" type="submit">
-            <i data-lucide="save"></i>
-            Save profile
-        </button>
-    </form>
+<section class="section profile-dashboard">
+    <div class="profile-stats-grid">
+        <article>
+            <span><i data-lucide="receipt-text"></i></span>
+            <small>Total orders</small>
+            <strong>{{ profile_stats.total_orders }}</strong>
+        </article>
+        <article>
+            <span><i data-lucide="bike"></i></span>
+            <small>Active orders</small>
+            <strong>{{ profile_stats.active_orders }}</strong>
+        </article>
+        <article>
+            <span><i data-lucide="wallet"></i></span>
+            <small>Total spent</small>
+            <strong>&#8377;{{ profile_stats.total_spent|floatformat:2 }}</strong>
+        </article>
+    </div>
 
-    <aside class="summary-panel">
-        <h2>Recent orders</h2>
-        {% for order in recent_orders %}
-            <a class="profile-order-link" href="{% url 'order_detail' order.tracking_code %}">
-                <span>{{ order.restaurant.name }}</span>
-                <strong>{{ order.get_status_display }}</strong>
-            </a>
-        {% empty %}
-            <p>No recent orders.</p>
-        {% endfor %}
-    </aside>
+    <div class="profile-layout premium-profile-layout">
+        <form class="profile-form premium-profile-form" method="post">
+            {% csrf_token %}
+            <div class="profile-section-head">
+                <span class="profile-section-icon"><i data-lucide="user-round"></i></span>
+                <div>
+                    <span class="eyebrow">Personal details</span>
+                    <h2>Account and delivery profile</h2>
+                </div>
+            </div>
+            <div class="form-grid two">
+                <label class="form-field">
+                    <span>First name</span>
+                    {{ user_form.first_name }}
+                    {{ user_form.first_name.errors }}
+                </label>
+                <label class="form-field">
+                    <span>Last name</span>
+                    {{ user_form.last_name }}
+                    {{ user_form.last_name.errors }}
+                </label>
+            </div>
+            <label class="form-field">
+                <span>Email</span>
+                {{ user_form.email }}
+                {{ user_form.email.errors }}
+            </label>
+            <div class="form-grid two">
+                <label class="form-field">
+                    <span>Phone</span>
+                    {{ profile_form.phone }}
+                    {{ profile_form.phone.errors }}
+                </label>
+                <label class="form-field">
+                    <span>Postcode</span>
+                    {{ profile_form.postcode }}
+                    {{ profile_form.postcode.errors }}
+                </label>
+            </div>
+            <label class="form-field">
+                <span>Address</span>
+                {{ profile_form.address }}
+                {{ profile_form.address.errors }}
+            </label>
+            <div class="form-grid two">
+                <label class="form-field">
+                    <span>City</span>
+                    {{ profile_form.city }}
+                    {{ profile_form.city.errors }}
+                </label>
+                <label class="form-field">
+                    <span>Avatar URL</span>
+                    {{ profile_form.avatar_url }}
+                    {{ profile_form.avatar_url.errors }}
+                </label>
+            </div>
+            <label class="form-field">
+                <span>Delivery notes</span>
+                {{ profile_form.delivery_notes }}
+                {{ profile_form.delivery_notes.errors }}
+            </label>
+            <button class="primary-button profile-save-button" type="submit">
+                <i data-lucide="save"></i>
+                Save profile
+            </button>
+        </form>
+
+        <aside class="summary-panel premium-profile-sidebar">
+            <div class="profile-section-head">
+                <span class="profile-section-icon"><i data-lucide="activity"></i></span>
+                <div>
+                    <span class="eyebrow">Activity</span>
+                    <h2>Recent orders</h2>
+                </div>
+            </div>
+
+            {% if user.profile.premium_active %}
+                <div class="profile-premium-card active">
+                    <i data-lucide="crown"></i>
+                    <div>
+                        <span>{{ user.profile.get_premium_plan_display }} Premium active</span>
+                        <strong>{{ user.profile.premium_discount_percent }}% food discount</strong>
+                        {% if user.profile.premium_expires_at %}
+                            <small>Active until {{ user.profile.premium_expires_at|date:"d M Y" }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <a class="profile-premium-card" href="{% url 'premium' %}">
+                    <i data-lucide="crown"></i>
+                    <div>
+                        <span>Unlock Premium</span>
+                        <strong>Free delivery + up to 25% off</strong>
+                    </div>
+                </a>
+            {% endif %}
+
+            <div class="profile-order-list">
+                {% for order in recent_orders %}
+                    <a class="profile-order-card" href="{% url 'order_detail' order.tracking_code %}">
+                        <span class="profile-order-icon"><i data-lucide="receipt"></i></span>
+                        <div>
+                            <strong>{{ order.restaurant.name }}</strong>
+                            <small>{{ order.created_at|date:"M d, Y" }} - &#8377;{{ order.total }}</small>
+                        </div>
+                        <span class="status-pill status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    </a>
+                {% empty %}
+                    <div class="profile-empty-orders">
+                        <span><i data-lucide="shopping-bag"></i></span>
+                        <strong>No recent orders</strong>
+                        <small>Your Tonmoy Eats orders will appear here.</small>
+                        <a class="primary-button full-width" href="{% url 'restaurant_list' %}">Order food</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </aside>
+    </div>
 </section>
 {% endblock %}
