@@ -74,7 +74,7 @@ DEBUG = env_bool('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = env_list(
     'DJANGO_ALLOWED_HOSTS',
-    '127.0.0.1,localhost',
+    '127.0.0.1,localhost,django-food-delivery-website-main-4c619d9.kuberns.cloud',
 )
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip()
@@ -83,6 +83,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 ALLOWED_HOSTS = unique(ALLOWED_HOSTS)
 
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+CSRF_TRUSTED_ORIGINS.append('https://django-food-delivery-website-main-4c619d9.kuberns.cloud')
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 CSRF_TRUSTED_ORIGINS = unique(CSRF_TRUSTED_ORIGINS)
