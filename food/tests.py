@@ -3,8 +3,9 @@ from decimal import Decimal
 from unittest.mock import patch
 
 from django.core import mail
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
-from django.test import Client, RequestFactory, TestCase
+from django.test import Client, RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -372,6 +373,41 @@ class FoodFlowTests(TestCase):
         self.assertEqual(filename, f'tonmoy-eats-invoice-{order.tracking_code}.pdf')
         self.assertEqual(mimetype, 'application/pdf')
         self.assertTrue(content.startswith(b'%PDF'))
+
+    @override_settings(
+        EMAIL_BACKEND='food.email_backends.ResendEmailBackend',
+        RESEND_API_KEY='re_test_key',
+        RESEND_FROM_EMAIL='Tonmoy Eats <onboarding@resend.dev>',
+        EMAIL_TIMEOUT=5,
+    )
+    @patch('food.email_backends.urllib.request.urlopen')
+    def test_resend_backend_sends_html_and_attachments(self, mocked_urlopen):
+        class Response:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, traceback):
+                return False
+
+        mocked_urlopen.return_value = Response()
+        message = EmailMultiAlternatives(
+            'Receipt',
+            'Your receipt is attached.',
+            'Tonmoy Eats <onboarding@resend.dev>',
+            ['buyer@example.com'],
+        )
+        message.attach_alternative('<p>Your receipt is attached.</p>', 'text/html')
+        message.attach('invoice.pdf', b'%PDF-test', 'application/pdf')
+
+        self.assertEqual(message.send(), 1)
+        request = mocked_urlopen.call_args.args[0]
+        payload = request.data.decode('utf-8')
+
+        self.assertIn('"to": ["buyer@example.com"]', payload)
+        self.assertIn('"html": "<p>Your receipt is attached.</p>"', payload)
+        self.assertIn('"filename": "invoice.pdf"', payload)
 
     def create_order(self):
         user = User.objects.create_user(username='buyer', password='secret')

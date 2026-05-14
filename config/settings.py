@@ -203,8 +203,16 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '').replace(' ', '')
 EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', True)
 EMAIL_USE_SSL = env_bool('EMAIL_USE_SSL', False)
 EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '20'))
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '').strip()
+RESEND_FROM_EMAIL = os.environ.get('RESEND_FROM_EMAIL', '').strip()
 
-if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+if RESEND_API_KEY:
+    EMAIL_BACKEND = 'food.email_backends.ResendEmailBackend'
+    if RESEND_FROM_EMAIL:
+        DEFAULT_FROM_EMAIL = RESEND_FROM_EMAIL
+        SERVER_EMAIL = RESEND_FROM_EMAIL
+
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD and not RESEND_API_KEY:
     EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
     EMAIL_HOST = EMAIL_HOST or 'smtp.gmail.com'
     if not os.environ.get('DEFAULT_FROM_EMAIL'):
