@@ -127,6 +127,8 @@ def absolute_tracking_url(order, request=None):
     path = reverse('order_tracking', kwargs={'tracking_code': order.tracking_code})
     if request:
         return request.build_absolute_uri(path)
+    if settings.SITE_URL:
+        return f'{settings.SITE_URL}{path}'
     return path
 
 

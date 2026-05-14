@@ -43,6 +43,16 @@ The webhook endpoint is `/stripe/webhook/`.
 
 Development email uses Django's console email backend by default, so OTP and order emails print in the terminal. Set `EMAIL_BACKEND`, SMTP host, and credentials in environment variables for real email delivery.
 
+## Deployment
+
+This repo includes Render deployment files:
+
+- `render.yaml` creates the web service and PostgreSQL database.
+- `build.sh` installs dependencies, collects static files, runs migrations, and seeds starter data.
+- `.python-version` pins the deploy runtime to Python 3.13.
+
+Read [DEPLOYMENT.md](DEPLOYMENT.md) before deploying so email OTP, Stripe card payments, Premium subscriptions, and invoice emails are configured correctly in production.
+
 ## Main Modules
 
 - Restaurant model, categories, and menu items
